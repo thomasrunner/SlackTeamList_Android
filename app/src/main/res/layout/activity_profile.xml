@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context="com.slackteam.tlock.slackteamlist.ProfileActivity">
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:id="@+id/UserProfilePhotoImageView"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/UserProfileNameBelowPhotoTextView"
+        android:text="name"
+        android:textSize="24dp"
+        android:textColor="#aa34ff"
+        android:layout_below="@+id/UserProfilePhotoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/ProfileUserPresenseImageView"
+        android:background="#5cff4f"
+        android:layout_marginLeft="16dp"
+        android:layout_alignTop="@+id/UserProfileNameBelowPhotoTextView"
+        android:layout_toEndOf="@+id/UserProfileNameBelowPhotoTextView"
+        android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="1">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:id="@+id/MessageButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.25"
+            android:background="@android:color/transparent"
+            android:textColor="#057cc6"
+            android:textColorHighlight="#000000"
+            android:text="Message @slackbot"
+            android:shadowRadius="0"
+            android:elevation="0dp"
+            android:textSize="14dp" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:id="@+id/EmailButton"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="0.25"
+            android:background="@android:color/transparent"
+            android:textColor="#057cc6"
+            android:textColorHighlight="#000000"
+            android:text="email@slack.com"
+            android:visibility="invisible"
+            android:shadowRadius="0"
+            android:elevation="0dp"
+            android:textSize="14dp"
+            android:onClick="EmailButton_onClick" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:id="@+id/SkypeButton"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="0.25"
+            android:background="@android:color/transparent"
+            android:textColor="#057cc6"
+            android:textColorHighlight="#000000"
+            android:text="skype name"
+            android:visibility="invisible"
+            android:shadowRadius="0"
+            android:elevation="0dp"
+            android:textSize="14dp"
+             />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:id="@+id/CallButton"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="0.25"
+            android:background="@android:color/transparent"
+            android:textColor="#057cc6"
+            android:textColorHighlight="#000000"
+            android:text="phone #"
+            android:visibility="invisible"
+            android:shadowRadius="0"
+            android:elevation="0dp"
+            android:textSize="14dp"
+            android:onClick="CallButton_onClick" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/UserProfileRoleTextView"
+        android:layout_below="@+id/UserProfileNameBelowPhotoTextView"
+        android:layout_centerHorizontal="true"
+        android:text="role"
+        android:textStyle="italic"
+        android:textSize="18dp"
+        android:textColor="#808080"
+        android:layout_marginTop="8dp" />
+</RelativeLayout>
