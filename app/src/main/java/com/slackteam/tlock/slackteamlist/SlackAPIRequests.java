@@ -5,31 +5,23 @@ package com.slackteam.tlock.slackteamlist;
  * tlock@fhotoroom.com
  */
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
 // Specific class as the interface for all Slack API calls and output JSON results
 public class SlackAPIRequests {
 
-    LinkedHashMap<String, String> urlparameters = new LinkedHashMap<>();
-    String jsonresponse = "";
+    LinkedHashMap<String, String> urlparameters = new LinkedHashMap<String,String>();
 
     MainActivity parent = null;
 
@@ -46,7 +38,7 @@ public class SlackAPIRequests {
         }
     }
 
-    public String SlackAPIRequest(MainActivity mainactivity, String token, String apiurl)
+    public void SlackAPIRequest(MainActivity mainactivity, String token, String apiurl)
     {
         APIRequest task = new APIRequest();
         Random r = new Random();
@@ -56,12 +48,11 @@ public class SlackAPIRequests {
         String encodedmessage = "";
 
         try {
-            encodedmessage = (String) URLEncoder.encode(encodedmessage, "UTF-8");
+            encodedmessage = URLEncoder.encode(encodedmessage, "UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        task.execute(new String[]{token, apiurl, ""});
-        return jsonresponse;
+        task.execute(token, apiurl, "");
     }
 
     //  Actual API call Task, the User Token must be added as part of this call and not in the dictionary.
@@ -102,13 +93,13 @@ public class SlackAPIRequests {
         private String getOutputFromUrl(String url) {
 
 
-            StringBuffer output = new StringBuffer("");
+            StringBuilder output = new StringBuilder("");
             try {
 
                 InputStream stream = getHttpConnection(url);
                 BufferedReader buffer = new BufferedReader(
                         new InputStreamReader(stream));
-                String s = "";
+                String s;
                 while ((s = buffer.readLine()) != null)
                     output.append(s);
 
@@ -140,12 +131,8 @@ public class SlackAPIRequests {
         }
 
         protected void onPostExecute(String output) {
-
-            jsonresponse = output;
-
-            parent.RequestCallback();
+            parent.RequestCallback(output);
             //System.out.println(jsonresponse);
-
         }
     }
     

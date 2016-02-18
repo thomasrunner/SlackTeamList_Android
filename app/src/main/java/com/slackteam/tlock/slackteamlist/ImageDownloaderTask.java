@@ -5,9 +5,9 @@ package com.slackteam.tlock.slackteamlist;
  * tlock@fhotoroom.com
  */
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -20,19 +20,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 //Async Image Downloader
 public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
-
-    public ImageDownloaderTask(ImageView imageView) {
+    private String fileurl = "";
+    private Context appcontext;
+    public ImageDownloaderTask(ImageView imageView, Context context) {
+        appcontext = context;
         imageViewReference = new WeakReference<ImageView>(imageView);
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
+        fileurl = params[0];
         return downloadBitmap(params[0]);
     }
 
@@ -46,15 +48,48 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
             ImageView imageView = imageViewReference.get();
             if (imageView != null) {
                 if (bitmap != null) {
+
                     imageView.setImageBitmap(bitmap);
+
+                    //Basic File Caching hashCode for filename
+                    String filename=String.valueOf(fileurl.hashCode()).replace("-","");
+                    String extStorageDirectory = appcontext.getFilesDir().toString();
+                    OutputStream outStream = null;
+
+                    File file = new File(extStorageDirectory + "/members/","m_" + filename + ".jpg" );
+                    if(!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        try {
+                            file.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        file.delete();
+                        try {
+                            file.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    try {
+                        OutputStream out = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.close();
+                    } catch (Exception t) {
+                        file.delete();
+                        //throw t;
+                    }
+
                 } else {
-                    //Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.placeholder);
-                    //imageView.setImageDrawable(placeholder);
+                    imageView.setImageResource(R.drawable.reload_50px);
                 }
             }
         }
     }
-
 
     private Bitmap decodeFile(File f){
         try {
@@ -67,14 +102,19 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         return null;
     }
 
+
     private Bitmap downloadBitmap(String url) {
 
-        FileCache fileCache = new FileCache(ApplicationContextProvider.getContext());
-        File f=fileCache.getFile(url);
+        //Basic File Caching hashCode for filename
+        String filename=String.valueOf(url.hashCode()).replace("-", "");
+        String extStorageDirectory = appcontext.getFilesDir().toString();
+        //OutputStream outStream = null;
 
-        //from SD cache
-        Bitmap b = decodeFile(f);
-        if(b!=null)
+        File file = new File(extStorageDirectory + "/members/","m_" +  filename + ".jpg" );
+
+        //from Cache first
+        Bitmap b = decodeFile(file);
+        if (b != null)
             return b;
 
         //from web
@@ -90,8 +130,8 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
                 InputStream inputStream = urlConnection.getInputStream();
                 if (inputStream != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    return bitmap;
+                    b = BitmapFactory.decodeStream(inputStream);
+                    return b;
                 }
             } catch (Exception e) {
                 urlConnection.disconnect();
@@ -102,7 +142,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
                 }
             }
             return null;
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }

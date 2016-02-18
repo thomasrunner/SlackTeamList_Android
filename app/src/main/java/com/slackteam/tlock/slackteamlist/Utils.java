@@ -5,6 +5,10 @@ package com.slackteam.tlock.slackteamlist;
  * tlock@fhotoroom.com
  */
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -25,5 +29,12 @@ public class Utils {
             }
         }
         catch(Exception ex){}
+    }
+
+    public static boolean isNetworkAvailable(Context context)
+    {
+        ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = conn.getActiveNetworkInfo();
+        return info != null && info.isConnected();
     }
 }

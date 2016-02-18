@@ -5,7 +5,10 @@ package com.slackteam.tlock.slackteamlist;
  * tlock@fhotoroom.com
  */
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -48,7 +52,10 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         member = (UserModel) intent.getExtras().getSerializable("member");
 
-        new ImageDownloaderTask(UserProfilePhotoImageView).execute(member.profile.image_192);
+        ImageDownloaderTask downloadtask = new  ImageDownloaderTask(UserProfilePhotoImageView,this);
+        downloadtask.execute(member.profile.image_192);
+
+        //new ImageDownloaderTask(UserProfilePhotoImageView).execute(member.profile.image_192);
 
         this.setTitle(member.NamewithAtSymbol());
         UserProfileNameBelowPhotoTextView.setText(member.RealNamewithNameFailover());
@@ -81,7 +88,13 @@ public class ProfileActivity extends AppCompatActivity {
             CallButton.setText(member.profile.phone);
         }
 
+        if(!Utils.isNetworkAvailable(ProfileActivity.this))
+        {
+            Toast.makeText(getApplicationContext(), "You are offline or airplane mode.", Toast.LENGTH_LONG).show();
+        }
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

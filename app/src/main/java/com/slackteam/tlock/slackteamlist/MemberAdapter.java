@@ -39,20 +39,23 @@ public class MemberAdapter extends ArrayAdapter<UserModel>{
         ProfileFirstNameTextBlock.setText(memberuser.RealNamewithNameFailover());
         ProfileRoleTextBlock.setText(memberuser.TitlewithNameFailover());
 
-        new ImageDownloaderTask(ProfilePhotoImage).execute(memberuser.profile.image_72);
+
+        ImageDownloaderTask downloadtask = new  ImageDownloaderTask(ProfilePhotoImage,getContext());
+        downloadtask.execute(memberuser.profile.image_72);
+
         ProfileUserPresenseImageView.setBackgroundColor(memberuser.UserPresense());
 
-        if(memberuser.profile.email.length() > 0)
+        if(memberuser.profile.email.length() > 0 && !memberuser.profile.email.toLowerCase().contentEquals("null"))
         {
             EmailIconImageView.setVisibility((View.VISIBLE));
         }
 
-        if(memberuser.profile.skype.length() > 0)
+        if(memberuser.profile.skype.length() > 0 && !memberuser.profile.skype.toLowerCase().contentEquals("null"))
         {
             SkypeIconImageView.setVisibility((View.VISIBLE));
         }
 
-        if(memberuser.profile.phone.length() > 0)
+        if(memberuser.profile.phone.length() > 0 && memberuser.profile.phone.toLowerCase().contentEquals("null"))
         {
             CallIconImageView.setVisibility((View.VISIBLE));
         }

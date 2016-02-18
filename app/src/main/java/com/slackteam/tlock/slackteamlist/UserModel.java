@@ -5,25 +5,8 @@ package com.slackteam.tlock.slackteamlist;
  * tlock@fhotoroom.com
  */
 
-import android.app.Activity;
-import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.view.View;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class UserModel implements Serializable {
 
@@ -32,19 +15,19 @@ public class UserModel implements Serializable {
     public String id;
 
     /// Slack bot is a special user account on the Slack Network
-    public Boolean IsSlackBot()
+    public boolean IsSlackBot()
     {
         return id.contentEquals(("USLACKBOT").toUpperCase());
     }
 
     public String name ;
-    public Boolean deleted ;
+    public boolean deleted ;
     public String color ;
     public UserProfileModel profile ;
-    public Boolean is_admin ;
-    public Boolean is_owner ;
-    public Boolean has_files ;
-    public Boolean has_2fa ;
+    public boolean is_admin ;
+    public boolean is_owner ;
+    public boolean has_files ;
+    public boolean has_2fa ;
     public String presence ;
 
 
@@ -115,13 +98,13 @@ public class UserModel implements Serializable {
     /// Since Title can be "" this allows for a failover
     public String TitlewithNameFailover()
     {
-        if(profile.title.length() > 0 && profile.title.toLowerCase().contentEquals("null") == false)
+        if(profile.title.length() > 0 && !profile.title.toLowerCase().contentEquals("null"))
         {
             return profile.title;
         }
         else
         {
-            if (IsSlackBot() == false)
+            if (!IsSlackBot())
             {
                 return NamewithAtSymbol();
             }
@@ -136,42 +119,42 @@ public class UserModel implements Serializable {
     /// Since Title can be "" this allows for a failover
     public String RealNamewithNameFailover()
     {
-            if (profile.real_name.length() > 0)
+        if (profile.real_name.length() > 0)
+        {
+            return profile.real_name;
+        }
+        else
+        {
+            if (!IsSlackBot())
             {
-                return profile.real_name;
+                return NamewithAtSymbol();
             }
             else
             {
-                if (IsSlackBot() == false)
-                {
-                    return NamewithAtSymbol();
-                }
-                else
-                {
-                    return "";
-                }
+                return "";
             }
+        }
     }
 
 
     /// Nice little visual indicator to show the different types of users and the user status
     public int UserPresense()
     {
-        if (deleted == false)
+        if (!deleted)
         {
-            if (presence.contentEquals("away") == true)
+            if (presence.contentEquals("away"))
             {
                 return slackconstants.getColor("away");
             }
-            else if (is_admin == true)
+            else if (is_admin)
             {
                 return slackconstants.getColor("admin");
             }
-            else if (is_owner == true)
+            else if (is_owner)
             {
                 return slackconstants.getColor("owner");
             }
-            else if (IsSlackBot() == true)
+            else if (IsSlackBot())
             {
                 return slackconstants.getColor("bots");
             }
@@ -190,17 +173,17 @@ public class UserModel implements Serializable {
     /// Nice little visual indicator to show the different types of users and the user status, specific for user profile
     public int UserPresenceExcludingAwayStatusColor()
     {
-        if (deleted == false)
+        if (!deleted)
         {
-            if (is_admin == true)
+            if (is_admin)
             {
                 return slackconstants.getColor("admin");
             }
-            else if (is_owner == true)
+            else if (is_owner)
             {
                 return slackconstants.getColor("owner");
             }
-            else if (IsSlackBot() == true)
+            else if (IsSlackBot())
             {
                 return slackconstants.getColor("bots");
             }

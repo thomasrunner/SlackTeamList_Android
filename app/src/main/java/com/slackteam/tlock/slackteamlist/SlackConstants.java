@@ -34,7 +34,7 @@ public class SlackConstants  implements Serializable {
 
     public int getColor(String userstatus)
     {
-        if(userstatus == "") return usercolorstatusdict.get("all");
+        if(userstatus.contentEquals("")) return usercolorstatusdict.get("all");
         int requestcolor = usercolorstatusdict.get(userstatus);
         if (requestcolor != 0)
         {
